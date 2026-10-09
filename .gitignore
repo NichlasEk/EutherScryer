@@ -1,0 +1,15 @@
+/*
+!/.gitignore
+!/README.md
+!/package.json
+!/package-lock.json
+!/tsconfig.json
+!/src/
+!/tests/
+!/scripts/
+!/docs/
+!/demo/
+!/backend/
+node_modules/
+__pycache__/
+*.pyc

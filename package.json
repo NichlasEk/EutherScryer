@@ -1,0 +1,20 @@
+{
+  "name": "eutherscryer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test tests/*.test.ts && python3 -m unittest discover -s tests -p '*_test.py'",
+    "check": "tsc --noEmit",
+    "demo": "vite demo --host 127.0.0.1",
+    "build": "vite build demo --outDir ../.local/demo-dist"
+  },
+  "dependencies": {
+    "three": "0.184.0"
+  },
+  "devDependencies": {
+    "@types/three": "0.184.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.0.0"
+  }
+}

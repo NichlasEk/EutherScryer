@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>EutherScryer · field study</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, sans-serif;
+      color: #e9f8fa;
+      background: #060b13;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+    header {
+      position: fixed;
+      top: 28px;
+      left: 32px;
+      pointer-events: none;
+    }
+    small {
+      letter-spacing: 0.22em;
+      color: #b6aacd;
+    }
+    h1 {
+      font:
+        normal 38px Georgia,
+        serif;
+      margin: 12px 0;
+    }
+    header p {
+      color: #b2c6cd;
+      max-width: 380px;
+      line-height: 1.6;
+    }
+    #panel {
+      position: fixed;
+      right: 24px;
+      top: 24px;
+      width: 330px;
+      padding: 22px;
+      border: 1px solid #3e5163;
+      background: #101923ee;
+      border-radius: 14px;
+      max-height: 85vh;
+      overflow: auto;
+    }
+    h2 {
+      font:
+        normal 24px Georgia,
+        serif;
+    }
+    button,
+    input {
+      font: inherit;
+      border: 1px solid #738798;
+      background: #172d39;
+      color: #efffff;
+      padding: 9px 12px;
+      border-radius: 6px;
+    }
+    button {
+      cursor: pointer;
+    }
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #e0b9ff;
+      outline-offset: 3px;
+    }
+    #answer {
+      white-space: pre-line;
+      line-height: 1.55;
+      font-size: 13px;
+      color: #d1e3eb;
+    }
+    #event {
+      width: 100%;
+      margin: 12px 0;
+    }
+    form {
+      display: flex;
+      gap: 6px;
+    }
+    input {
+      min-width: 0;
+      width: 100%;
+    }
+    #legend {
+      position: fixed;
+      bottom: 86px;
+      left: 24px;
+      font-size: 12px;
+      color: #b2c6cd;
+    }
+    #status {
+      color: #a2e8d9;
+    }
+    #evidence {
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-line;
+      color: #c3b4dc;
+    }
+    @media (max-width: 760px) {
+      header {
+        top: 15px;
+        left: 18px;
+      }
+      h1 {
+        font-size: 27px;
+      }
+      header p {
+        display: none;
+      }
+      #panel {
+        top: auto;
+        bottom: 82px;
+        right: 12px;
+        width: min(310px, 85vw);
+        max-height: 38vh;
+      }
+      #legend {
+        display: none;
+      }
+    }
+  </style>
+  <canvas
+    id="world"
+    aria-label="Simulated EutherVerse world, wandering Scryer and speculative ghost nodes"
+  ></canvas>
+  <header>
+    <small>EUTHERVERSE / FIELD STUDY 01</small>
+    <h1>A wandering dreamer.</h1>
+    <p>
+      Observe what exists.<br />Imagine what could exist.<br />Never confuse the
+      two.
+    </p>
+  </header>
+  <section id="panel" aria-label="Scryer interaction">
+    <small>SIMULATED TOPOLOGY · NO LIVE SERVICES</small>
+    <h2>What if…?</h2>
+    <p id="status" role="status">Waking in the world</p>
+    <button id="event">Simulate EutherVault status change</button>
+    <div id="evidence"></div>
+    <p id="answer" aria-live="polite">
+      Click the wandering lantern or press F to talk. Purple wireframes are
+      hypotheses, never infrastructure.
+    </p>
+    <form>
+      <input
+        aria-label="Ask Scryer"
+        placeholder="What are you looking at?"
+        maxlength="1200"
+      /><button>Ask</button>
+    </form>
+  </section>
+  <div id="legend">
+    Drag to orbit · scroll to approach · F converse · violet wireframe =
+    speculative
+  </div>
+  <script type="module" src="/main.ts"></script>
+</html>
