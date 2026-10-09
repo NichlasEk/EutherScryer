@@ -46,3 +46,20 @@ No production deployment or service restart is necessary for local validation.
 No private vault data, log bodies, paths, credentials, units, SSH or port data
 are copied into Scryer's observations. Node identifiers are topology metadata;
 status is reported inventory evidence, never a fresh health measurement.
+
+## Shared production observer (implemented after the initial investigation)
+
+The initial browser-local slice above has been superseded in production.
+EutherNet now owns a bounded deterministic ScryerWorld thread, using its existing
+state root and cached map. It polls inventory every 60 seconds and moves at
+4 world units/second with obstacle avoidance matching native lane coordinates.
+Routine observation makes no model calls. Its state is atomic, fsynced, bounded
+and single-writer locked; SIGTERM enters clean shutdown. Invalid persisted state
+pauses instead of silently starting another investigation.
+
+The existing authenticated EutherOxide proxy exposes GET /scryer to ServerMap
+users and POST /scryer/control only to administrators. Controls only affect the
+observer. Browsers interpolate authoritative positions and preserve existing
+E/F interaction, room transitions and the Librarian. Two browsers share one
+world, memory and pause state. The model remains a bounded optional interpreter
+on /ask and cannot perform operations or create real infrastructure.

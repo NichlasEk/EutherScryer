@@ -244,3 +244,28 @@ test("browser fetch receives its required global receiver", async () => {
   );
   await access.authorization();
 });
+
+test("shared controls require owner permission and never expose infrastructure commands", async () => {
+  const reader = new ObservationAccess(
+    {
+      authenticated: true,
+      user: "reader",
+      permissions: { canServerMap: true },
+    },
+    async () => {
+      throw Error("must not connect");
+    },
+  );
+  assert.throws(() => reader.control("pause"), /Owner permission/);
+  const requests: any[] = [];
+  const owner = new ObservationAccess(
+    { authenticated: true, user: "owner", isAdmin: true },
+    async (path, options) => {
+      requests.push({ path, options });
+      return new Response("{}");
+    },
+  );
+  await owner.control("pause");
+  assert.equal(requests[0].path, "/api/admin/euthernet/scryer/control");
+  assert.deepEqual(JSON.parse(requests[0].options.body), { command: "pause" });
+});

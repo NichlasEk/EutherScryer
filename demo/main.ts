@@ -132,7 +132,7 @@ window.fetch = async (input) =>
     ),
     { status: 200, headers: { "Content-Type": "application/json" } },
   );
-const scryer = mountScryer(auth, root, nodes);
+const scryer = mountScryer(auth, root, nodes, { shared: false });
 scryer.attach(map, positions);
 const answer = document.querySelector("#answer")!,
   status = document.querySelector("#status")!,

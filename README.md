@@ -12,7 +12,7 @@ and bounded restartable state. It integrates with EutherOxide's actual
 ## Run the simulated world
 
 ```sh
-npm ci
+npm ci # Node.js 22.6+ for the TypeScript test runner
 npm test
 npm run check
 npm run demo -- --port 5193
@@ -41,8 +41,10 @@ python3 scripts/integrate.py --oxide /path/to/staged/EutherOxide \
 
 The script checks known anchors, copies the renderer modules into
 `webview/scryer`, reuses existing scene picking and custodian controls, and adds
-a bounded Scryer persona to EutherNet's existing `/ask` handler. No new route,
-credentials, daemon, administrative permission, or unrestricted model tools.
+a bounded Scryer persona to EutherNet's existing `/ask` handler. A shared observer
+runs inside the existing EutherNet process. GET `/scryer` exposes filtered state;
+POST `/scryer/control` requires the host's administrator permission. No new
+credentials, daemon or unrestricted model tools.
 The normal Librarian path remains available. The script does not deploy,
 restart services, or modify any other checkout.
 
@@ -73,14 +75,15 @@ See [validation](docs/VALIDATION.md) for what was actually exercised.
   Free-text model output is marked unverified and cannot mutate state or run
   commands. Browser cancellation stops waiting; the server request remains
   bounded by its own timeout. Disabled AI falls back to grounded local dialogue.
-* The owner can pause or disable the inhabitant and dismiss ideas. Hidden pages
-  and rooms suspend exploration. Stale inventory (>24 hours) stops new work.
+* The owner can globally pause or disable the inhabitant and dismiss ideas.
+  Server exploration continues with browsers closed. Stale inventory (>24 hours)
+  stops new work.
   Authorization is checked before boot, periodically and before dialogue.
-* Memory is per user **in this browser**, maximum 64 observations, 24 hypotheses,
-  32 queued events and one current-inventory visited set. It is not a shared,
-  always-on server agent. Browser data removal removes this memory. Multiple
-  tabs are separate observers; a shared authoritative world needs server-owned
-  persistence and scheduling before production-wide activation.
+* Production memory is shared and persisted atomically in EutherNet's state
+  directory (`scryer-state.json`, mode 0600), protected by a single-writer lock.
+  Limits: 64 observations, 24 hypotheses, 32 queued events and 2000 visited IDs.
+  Corrupt state pauses the observer; restarts preserve controls and progress.
+  Only the standalone simulation uses browser-local memory.
 * No TTS or agent-to-agent messaging is enabled. No bounded documentation
   interface was found to safely reuse. A local Qwen backend is supported via
   existing EutherNet configuration; model availability is an independent gate.
@@ -88,3 +91,6 @@ See [validation](docs/VALIDATION.md) for what was actually exercised.
 The checkout is currently the disk root chosen by the owner. Its allowlist
 `.gitignore` intentionally excludes all unrelated project directories, models,
 staging copies, generated builds and local runtime data.
+
+For an already integrated checkout, use `scripts/enable_shared.py --oxide PATH --net PATH`.
+See [deployment evidence and rollback](docs/DEPLOYMENT.md).

@@ -1,5 +1,8 @@
 # Validation — 2026-10-09
 
+The initial results below precede deployment. See the shared production update
+at the end and DEPLOYMENT.md for current delivery status.
+
 ## Passed
 
 * Eleven TypeScript regression tests: authorization and revocation; projection
@@ -62,9 +65,24 @@ Set `FIREFOX_EXECUTABLE` if using an existing Firefox Playwright installation;
 otherwise the tests use Playwright's installed Firefox. Screenshots and generated
 artifacts remain under ignored `.local/`.
 
-## Remaining delivery gates
+## Initial delivery gates (historical)
 
 Production deployment, authenticated live browser acceptance, shared server
 persistence and an always-on observation service are not certified by local
 simulation. Optional voice and structured Librarian documentation requests are
 not implemented. These are explicit scope limits of this first vertical slice.
+
+## Shared production update
+
+* 12 TypeScript and 15 Python Scryer regression tests pass locally. The server
+  passes all 15 Python tests; its Node version cannot run strip-types, so the
+  TypeScript suite runs locally with Node 22+.
+* Native Firefox integration passes using the real Python shared runtime:
+  two browser contexts agree on state, native lane coordinates match, owner
+  pause is shared, E/F dialogue and the Librarian coexist, and revocation closes
+  observation access. No browser errors.
+* The Rust host permission regression passes with shared read/control routes.
+* Existing EutherNet regression suite: 15 passed before activation.
+* A deployed local Qwen interpretation returned source scryer-model.
+
+Optional voice and structured inter-agent documentation requests remain absent.
