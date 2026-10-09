@@ -151,3 +151,7 @@ shutil.copytree(root / "src", a.oxide / "webview/scryer", dirs_exist_ok=True)
 for filename in ("scryer.py", "scryer_world.py"):
     shutil.copy2(root / "backend" / filename, a.net / "scripts" / filename)
 print("Shared state integration prepared; no services restarted.")
+
+import subprocess
+import sys
+subprocess.run([sys.executable, str(root / 'scripts/extend_integration.py'), '--oxide', str(a.oxide), '--net', str(a.net)], check=True)

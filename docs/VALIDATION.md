@@ -86,3 +86,18 @@ not implemented. These are explicit scope limits of this first vertical slice.
 * A deployed local Qwen interpretation returned source scryer-model.
 
 Optional voice and structured inter-agent documentation requests remain absent.
+
+## Ideas and mirror release
+
+* 33 Scryer tests (12 TypeScript, 21 Python) pass, including dependency evidence,
+  repeated-status evidence requirements, persisted owner reports, metadata
+  projection, stale checker reports and checksum/backup-age failures.
+* EutherNet's server suite passes 35 tests after adding mirror and observer
+  coverage; the native status classifier's three tests pass as well.
+* Firefox native interaction passes Find Scryer, linked evidence, save idea,
+  record investigation, reload persistence, two shared browser contexts,
+  dialogue, Librarian coexistence and authorization revocation.
+* Firefox desktop/mobile simulation passes with zero page errors.
+* Live forced-command SSH test: requesting another command still returns only
+  the fixed metadata export. The report verifies healthy checksums and timer;
+  this is not evidence of a tested restore.

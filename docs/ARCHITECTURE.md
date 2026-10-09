@@ -63,3 +63,17 @@ observer. Browsers interpolate authoritative positions and preserve existing
 E/F interaction, room transitions and the Librarian. Two browsers share one
 world, memory and pause state. The model remains a bounded optional interpreter
 on /ask and cannot perform operations or create real infrastructure.
+
+## Evidence and owner investigations
+
+The observer adds shared-dependency and recurring-status templates using the
+same bounded filtered inventory. No model call is needed. Owner reports are
+separate fields attached to immutable hypothesis evidence, persisted through the
+existing administrator-only Scryer control route. Native focus and the Ideas
+dialog reuse the existing scene nodes and camera; no alternate world is built.
+
+The existing desktop backup check is reused through a restricted SSH metadata
+export. A dedicated key is constrained by source address and a forced command,
+with forwarding disabled. EutherNet reads that fixed export with a timeout and
+cache; Scryer itself only sees normal filtered topology. See IDEAS_AND_MIRROR.md
+for the freshness boundaries and removal instructions.

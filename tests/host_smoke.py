@@ -45,7 +45,7 @@ with tempfile.TemporaryDirectory() as directory, sync_playwright() as p:
             data = shared.snapshot()
         elif path == "/api/admin/euthernet/scryer/control":
             body = route.request.post_data_json
-            data = shared.control(body["command"], body.get("ghost_id"))
+            data = shared.control(body["command"], body.get("ghost_id"), body.get("data"))
         elif path.endswith("/commands"):
             data = {"commands": []}
         elif path.endswith("/audit"):
@@ -97,6 +97,32 @@ with tempfile.TemporaryDirectory() as directory, sync_playwright() as p:
     page.keyboard.press("Escape")
     page.wait_for_function("window.scryerHostTest.room === 'city'")
     assert page.evaluate("window.scryerHostTest.nodes.includes('scryer:inhabitant')")
+    # The actual user-facing focus button moves the camera, rather than a test-only aim.
+    page.keyboard.press("m")
+    page.get_by_role("button", name="Find Scryer", exact=True).click()
+    page.wait_for_timeout(400)
+    projected = page.evaluate("window.scryerHostTest.project('scryer:inhabitant')")
+    assert abs(projected[0]) < 0.2 and abs(projected[1]) < 0.2, projected
+    assert page.evaluate("window.scryerHostTest.distance('scryer:inhabitant')") > 7
+    assert page.locator("#ev-target").inner_text() == "EutherScryer"
+    page.wait_for_function("window.scryerHostTest.agent.inhabitant.engine.state.ghosts.some(g => g.node === 'server' && g.pattern === 'shared-host')", timeout=120000)
+    page.get_by_role("button", name="Ideas ·").click()
+    dialog = page.get_by_role("dialog", name="Scryer hypotheses and evidence")
+    dialog.get_by_role("button", name="server · shared-host").click()
+    dialog.get_by_role("button", name="Save idea", exact=True).click()
+    dialog.get_by_role("button", name="Unsave idea", exact=True).wait_for()
+    dialog.get_by_label("Investigation outcome").select_option("inconclusive")
+    dialog.get_by_label("Investigation notes").fill("Checked documentation; no restore performed.")
+    dialog.get_by_role("button", name="Record investigation", exact=True).click()
+    page.wait_for_function("window.scryerHostTest.agent.inhabitant.engine.state.ghosts.some(g => g.review?.outcome === 'inconclusive')")
+    page.screenshot(path=".local/scryer-ideas.png")
+    dialog.get_by_role("button", name="Close", exact=True).click()
+    page.reload()
+    page.wait_for_function("window.scryerHostTest?.agent?.inhabitant.engine.state.ghosts.some(g => g.review?.saved && g.review?.note.includes('no restore'))")
+    page.get_by_role("button", name="Ideas ·").click()
+    dialog.get_by_role("button", name="server · shared-host").click()
+    dialog.get_by_role("button", name="server", exact=True).click()
+    assert page.locator("#ev-target").inner_text() != "EutherScryer"
     # Two browser contexts share one owner-controlled state, never local copies.
     page.get_by_role("button", name="Pause", exact=True).click()
     page.wait_for_function("window.scryerHostTest.agent.inhabitant.engine.state.paused")
@@ -120,10 +146,9 @@ with tempfile.TemporaryDirectory() as directory, sync_playwright() as p:
     result = page.evaluate("window.scryerHostTest.agent.ask('What if?')")
     assert result == "Observation access unavailable."
     assert not page.evaluate("window.scryerHostTest.agent.inhabitant.engine.authorized")
-    assert writes == [
-        "/api/admin/euthernet/ask",
-        "/api/admin/euthernet/scryer/control",
-    ], writes
+    assert writes.count("/api/admin/euthernet/ask") == 1
+    assert writes.count("/api/admin/euthernet/scryer/control") == 3
+    assert set(writes) == {"/api/admin/euthernet/ask", "/api/admin/euthernet/scryer/control"}
     assert not errors, errors
     print(
         json.dumps(
@@ -133,6 +158,7 @@ with tempfile.TemporaryDirectory() as directory, sync_playwright() as p:
                 "approach_E_F_dialog": "PASS",
                 "librarian_coexistence": "PASS",
                 "shared_two_browsers": "PASS",
+                "find_evidence_save_review_reload": "PASS",
                 "native_coordinates": "PASS",
                 "authorization_revocation": "PASS",
                 "writes": writes,

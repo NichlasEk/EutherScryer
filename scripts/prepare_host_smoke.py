@@ -18,6 +18,8 @@ Object.assign(window, { scryerHostTest: {
   get agent() { return scryer; },
   get nodes() { return [...sceneNodes.keys()]; },
   get room() { return roomMode; },
+  project(id: string) { return sceneNodes.get(id)!.object.getWorldPosition(new THREE.Vector3()).project(camera).toArray(); },
+  distance(id: string) { return camera.position.distanceTo(sceneNodes.get(id)!.object.getWorldPosition(new THREE.Vector3())); },
   get positions() { return Object.fromEntries([...sceneNodes].map(([id,node])=>[id,{x:node.position.x,z:node.position.z}])); },
   aim(id: string) {
     const node = sceneNodes.get(id)!;

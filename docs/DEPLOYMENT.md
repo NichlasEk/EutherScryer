@@ -55,3 +55,29 @@ active hypothesis. EutherNet worktree is clean; EutherOxide has only its expecte
 generated `webview/build-info.ts` change. Server integration commits remain on
 the existing local branches; the standalone EutherScryer source is pushed to
 GitHub. Reload the existing page to replace the browser-local bundle.
+
+## Ideas and verified mirror health release
+
+Deployed follow-up commits:
+
+* EutherOxide `98725e6` on `agent/euthernet-admin-boundary`.
+* EutherNet `8d48dcb` on `agent/eutherid-stepup`.
+
+Both are pushed to their existing GitHub branches. The full native frontend
+build passes; both services are active. Current server-map.js SHA-256:
+`67089894222cbc826e3ad2a0225bc8e58ab1818018596587b4ca79ec536318f1`.
+The release directory is `/home/nichlas/releases/eutherscryer-ideas-20261009`.
+It retains the previous dist, original handler/CLI/world module and a private
+pre-upgrade state snapshot. A rollback to the old world schema should restore
+that state snapshot together with the old observer code after stopping EutherNet;
+keep a separate copy of newer state rather than discarding owner reports.
+
+Live acceptance: the map reports mirror healthy from the restricted .88 export,
+including checker time, 311 encrypted files across three datasets, timer state
+and latest successful copy. Shared observer diagnostics show no error and its
+pre-existing observations/hypotheses survived restart. New question templates
+and owner review persistence were exercised with simulated data in Firefox;
+no artificial investigation outcome was written into the production world.
+
+The restricted SSH key and forced-command exporter are described in
+IDEAS_AND_MIRROR.md. No robot configuration or map synchronization was changed.

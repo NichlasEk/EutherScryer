@@ -180,3 +180,82 @@ class WorldTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class IdeaReviewTests(unittest.TestCase):
+    setUp = WorldTest.setUp
+    tearDown = WorldTest.tearDown
+    advance = WorldTest.advance
+
+    def test_review_preserves_original_and_survives_restart(self):
+        self.advance(35)
+        g = self.world.state["ghosts"][0]
+        original = json.dumps(g["support"], sort_keys=True)
+        self.world.control("save", g["id"])
+        self.world.control(
+            "review",
+            g["id"],
+            {
+                "outcome": "inconclusive",
+                "note": "Documentation checked; restore not performed.",
+            },
+        )
+        restored = world_module.ScryerWorld(
+            self.directory.name, fixture, clock=lambda: self.now
+        )
+        actual = restored.state["ghosts"][0]
+        self.assertTrue(actual["review"]["saved"])
+        self.assertEqual(actual["review"]["outcome"], "inconclusive")
+        self.assertEqual(json.dumps(actual["support"], sort_keys=True), original)
+        with self.assertRaises(ValueError):
+            self.world.control("review", g["id"], {"outcome": "deployed", "note": "x"})
+        with self.assertRaises(ValueError):
+            self.world.control(
+                "review", g["id"], {"outcome": "supported", "note": "x" * 601}
+            )
+
+    def test_shared_dependency_evidence_and_archive(self):
+        raw = fixture()
+        raw["edges"] = [
+            {"from": "books", "to": "server", "type": "dependency"},
+            {"from": "vault", "to": "server", "type": "dependency"},
+        ]
+        self.world.ingest(raw)
+        self.advance(35)
+        g = self.world.state["ghosts"][0]
+        self.assertEqual(g["pattern"], "shared-dependency")
+        self.assertEqual(g["support"]["dependents"], ["books", "vault"])
+        self.world.save()
+        restored = world_module.ScryerWorld(
+            self.directory.name, fixture, clock=lambda: self.now
+        )
+        self.assertEqual(restored.state["ghosts"][0]["id"], g["id"])
+        raw["edges"].pop()
+        self.world.ingest(raw)
+        self.assertEqual(g["status"], "archived")
+
+    def test_status_changes_need_distinct_observations(self):
+        history = []
+        for i, status in enumerate(["running", "failed", "running"]):
+            stamp = f"2026-10-09T17:0{i}:00.000Z"
+            history.append(
+                world_module.observation(
+                    {
+                        "id": f"{stamp}/books/{status}",
+                        "node": "books",
+                        "status": status,
+                        "stamp": stamp,
+                        "at": NOW + i * 60000,
+                        "hosted": [],
+                    }
+                )
+            )
+        g = world_module.hypothesis(
+            history[-1], NOW + 120000, pattern="status-changes", history=history
+        )
+        self.assertEqual(len(g["evidence"]), 3)
+        self.assertIn("Unknown", g["uncertainty"])
+        with self.assertRaises(ValueError):
+            world_module.hypothesis(
+                history[-1], NOW, pattern="status-changes", history=[history[-1]] * 3
+            )

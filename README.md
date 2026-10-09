@@ -44,7 +44,8 @@ The script checks known anchors, copies the renderer modules into
 a bounded Scryer persona to EutherNet's existing `/ask` handler. A shared observer
 runs inside the existing EutherNet process. GET `/scryer` exposes filtered state;
 POST `/scryer/control` requires the host's administrator permission. No new
-credentials, daemon or unrestricted model tools.
+daemon or unrestricted model tools. Mirror health uses one restricted SSH
+identity that can only export checker metadata.
 The normal Librarian path remains available. The script does not deploy,
 restart services, or modify any other checkout.
 
@@ -94,3 +95,6 @@ staging copies, generated builds and local runtime data.
 
 For an already integrated checkout, use `scripts/enable_shared.py --oxide PATH --net PATH`.
 See [deployment evidence and rollback](docs/DEPLOYMENT.md).
+
+[Evidence, investigations and mirror health](docs/IDEAS_AND_MIRROR.md) describes
+the Find Scryer control, three hypothesis types and persisted owner reports.
