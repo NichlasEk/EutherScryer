@@ -27,7 +27,10 @@ restoration. Reconcile source commits separately before a subsequent build.
 
 Production state is `EutherNet/state/scryer-state.json`, permissions 0600.
 A server-side acceptance probe verified pause, clean EutherNet restart, exact
-position/observations/ghosts restoration, and resume. The live Qwen persona
+position/observations/ghosts restoration, and resume. A second restart retained
+two actual cached-inventory observations and one automatically generated
+shared-host hypothesis. Unauthenticated public requests to both shared routes
+were rejected with HTTP 403. The live Qwen persona
 returned an interpretation with source `scryer-model`.
 
 The screenshot supplied by the owner shows Scryer and its native dialogue.
@@ -39,3 +42,16 @@ available to the test runner. No authentication boundary was bypassed.
 Optional TTS and structured Librarian requests remain unimplemented. Current
 hypothesis generation is a deterministic shared-host recovery question; model
 interpretations are explicitly unverified and never execution instructions.
+
+## Activated shared release
+
+Full frontend (including existing WASM) and Rust release builds passed. Both
+services report active; the running host executable hash matches the new release.
+Activated `dist/assets/server-map.js` SHA-256:
+`175aed60eecdbf42abeb92d92de18935b9a7f02cc606ce24da84e13d8c86c032`.
+The previous browser-local frontend is retained as `v1-dist` in the release
+folder. Final live diagnostics: no observer error, four observations and one
+active hypothesis. EutherNet worktree is clean; EutherOxide has only its expected
+generated `webview/build-info.ts` change. Server integration commits remain on
+the existing local branches; the standalone EutherScryer source is pushed to
+GitHub. Reload the existing page to replace the browser-local bundle.
