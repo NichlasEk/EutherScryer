@@ -5,6 +5,8 @@ import os
 import tempfile
 import importlib.util
 import pathlib
+import sys
+sys.path.insert(0, str(pathlib.Path(__file__).parents[1] / "backend"))
 from playwright.sync_api import sync_playwright
 
 spec = importlib.util.spec_from_file_location(

@@ -148,7 +148,7 @@ http_path.write_text(http)
 rust_path.write_text(rust)
 map_path.write_text(worldmap)
 shutil.copytree(root / "src", a.oxide / "webview/scryer", dirs_exist_ok=True)
-for filename in ("scryer.py", "scryer_world.py"):
+for filename in ("scryer.py", "scryer_world.py", "scryer_reports.py", "scryer_vox_bridge.py"):
     shutil.copy2(root / "backend" / filename, a.net / "scripts" / filename)
 print("Shared state integration prepared; no services restarted.")
 

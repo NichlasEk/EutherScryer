@@ -85,7 +85,8 @@ See [validation](docs/VALIDATION.md) for what was actually exercised.
   Limits: 64 observations, 24 hypotheses, 32 queued events and 2000 visited IDs.
   Corrupt state pauses the observer; restarts preserve controls and progress.
   Only the standalone simulation uses browser-local memory.
-* No TTS or agent-to-agent messaging is enabled. No bounded documentation
+* Optional spoken reports reuse EutherVox TTS; see [Vox reports](docs/REPORTS.md).
+  No agent-to-agent messaging is enabled. No bounded documentation
   interface was found to safely reuse. A local Qwen backend is supported via
   existing EutherNet configuration; model availability is an independent gate.
 
